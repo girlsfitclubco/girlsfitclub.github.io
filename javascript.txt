@@ -1,0 +1,45 @@
+function calculateCalories() {
+const age = parseFloat(document.getElementById('age').value);
+const gender = document.getElementById('gender').value;
+const weightLbs = parseFloat(document.getElementById('weight').value);
+const feet = parseFloat(document.getElementById('height-feet').value);
+const inches = parseFloat(document.getElementById('height-inches').value);
+const activity = parseFloat(document.getElementById('activity').value);
+
+if (!age || !weightLbs || !feet || isNaN(inches) || !activity) {
+document.getElementById('result').innerHTML = 'Please fill in all fields 💕';
+return;
+}
+
+// Convert weight to kg (1 lb = 0.453592 kg)
+const weight = weightLbs * 0.453592;
+
+// Convert height to cm (1 ft = 30.48 cm, 1 in = 2.54 cm)
+const height = (feet * 30.48) + (inches * 2.54);
+
+// Mifflin-St Jeor Equation for BMR
+let bmr;
+if (gender === 'male') {
+bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+} else {
+bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+}
+
+// Total Daily Energy Expenditure (TDEE)
+const tdee = bmr * activity;
+
+// Universal calorie deficit of 500 calories
+const deficitCalories = 500;
+const targetCalories = Math.round(tdee - deficitCalories);
+
+// Weekly weight loss estimate (1 lb ≈ 3500 calories)
+const weeklyDeficit = deficitCalories * 7;
+const weeklyWeightLoss = (weeklyDeficit / 3500).toFixed(2);
+
+document.getElementById('result').innerHTML = `
+<strong>Your Results 💗</strong><br>
+Maintenance Calories: ${Math.round(tdee)} kcal/day<br>
+Target Calories (with 500 kcal deficit): ${targetCalories} kcal/day<br>
+Estimated Weekly Weight Loss: ${weeklyWeightLoss} lbs
+`;
+}
